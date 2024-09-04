@@ -1,9 +1,13 @@
 # pi_baremetal_qemu
 This repository contains ARM assembly code designed for bare-metal programming on the Raspberry Pi 2B
 
-**Qemu starten mit:** qemu-system-arm -S -s -m 1024 -M raspi2b -monitor stdio -kernel kernel7.elf -smp 4,cores=1   
+**Qemu starten mit:** 
 
-**Debuggen mit:** gdb-multiarch
+                  qemu-system-arm -S -s -m 1024 -M raspi2b -monitor stdio -kernel kernel7.elf -smp 4,cores=1   
+
+**Debuggen mit:** 
+                  
+                  gdb-multiarch
 
                   set architecture armv7
                   
