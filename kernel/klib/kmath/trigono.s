@@ -100,13 +100,13 @@ cos:                            @ s0 input & output
 tan:
     push {lr}
     push {r11}
-	mov r11, sp	
+    mov r11, sp	
     sub sp, sp, #8
     vstr.32 s0, [r11, #-4]     
     bl sine
     vstr.32 s0, [r11, #-8]
     vldr.32 s0, [r11, #-4]  
-	bl cos
+    bl cos
     vcmp.f32 s0, #0
     vmrs APSR_nzcv, FPSCR
     movne r0, #0
@@ -117,7 +117,7 @@ tan:
 tanend:
     add sp, sp, #8
     mov	sp, r11
-	pop	{r11}
+    pop	{r11}
     pop {lr}
     pop {pc}
 
