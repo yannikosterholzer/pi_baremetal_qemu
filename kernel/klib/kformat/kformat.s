@@ -16,8 +16,7 @@
 					   .space 120, 0x0
 	 				   .balign 4
 
-////////////////////// Es fehlt bei beiden fkt überprüfung von kformat_buffer_ende!  bufferoverflow, man sollte zudem num_2.. so umschreiben, dass es wie auch hex das filling bereits hier erledigt
-////////////////////// zudem fehlt überprüfung von negativen werten bei dez!
+
 .section .text
 
 @************************************************************************************
@@ -30,94 +29,91 @@
 @ Die Funktion ermöglicht auch die Angabe einer Feldbreite (fieldwidth) für die Ausgabe.
 @************************************************************************************
 float2ascii: // r1 = input , r3 = fieldwidth returnwert in r0 = ptr auf buffer mit str r1 = length
-	push {lr}
-	push {r11}
-	mov  r11, sp
-	vmov s0, r1
-	push {r3}
+			push {lr}
+			push {r11}
+			mov  r11, sp
+			vmov s0, r1
+			push {r3}
 float_asc:	
-	vcvt.s32.f32 s1, s0
-	vmov r0, s1
-	cmp r0, #0
-	bge float_positive
+			vcvt.s32.f32 s1, s0
+			vmov r0, s1
+			cmp r0, #0
+			bge float_positive
 float_negative:
-	ldr r1, =#-1
-	vmov s2, r1
-	vcvt.f32.s32 s2, s2
-	vcvt.f32.s32 s1, s1
-	vmul.f32 s1, s1, s2
-	vmul.f32 s0, s0, s2
-	vsub.f32 s0, s0, s1
-	mov r1, #0
-	sub r1, r1, r0
-	mov r2, #1
-	mov r3, #0
-	bl num_2_dec
-	b fraction
+			ldr r1, =#-1
+			vmov s2, r1
+			vcvt.f32.s32 s2, s2
+			vcvt.f32.s32 s1, s1
+			vmul.f32 s1, s1, s2
+			vmul.f32 s0, s0, s2
+			vsub.f32 s0, s0, s1
+			mov r1, #0
+			sub r1, r1, r0
+			mov r2, #1
+			mov r3, #0
+			bl num_2_dec
+			b fraction
 float_positive:
-	vcvt.f32.s32 s1, s1
-	vsub.f32 s0, s0, s1
-	mov r1, r0
-	mov r2, #0
-	mov r3, #0
-	bl num_2_dec
+			vcvt.f32.s32 s1, s1
+			vsub.f32 s0, s0, s1
+			mov r1, r0
+			mov r2, #0
+			mov r3, #0
+			bl num_2_dec
 fraction:
-	pop  {r3}
-	add r1, r1, #1
-	mov r2, #0x2e
-	strb r2, [r0, r1]
-	add r1, r1, #1
-	// push {r1}
-	mov r2, #10
-	vmov s2, r2
-	vcvt.f32.s32 s2, s2
-	ldr r2, =div_10
-	vldr.f32 s3, [r2]
-	vmov s15, s2
-	vmul.f32 s14, s15, s2
-	vmul.f32 s13, s14, s2
-	vmul.f32 s12, s13, s2
-	vmul.f32 q3, q3, d0[0]
-	vmul.f32 q2, q3, d1[1]
-	vcvt.s32.f32 q2, q2
-	vcvt.f32.s32 q2, q2
-	vmul.f32 q2, q2, d1[0]
-	vsub.f32 q1, q3, q2
-	vcvt.s32.f32 q2, q1
+			pop  {r3}
+			add r1, r1, #1
+			mov r2, #0x2e
+			strb r2, [r0, r1]
+			add r1, r1, #1
+			mov r2, #10
+			vmov s2, r2
+			vcvt.f32.s32 s2, s2
+			ldr r2, =div_10
+			vldr.f32 s3, [r2]
+			vmov s15, s2
+			vmul.f32 s14, s15, s2
+			vmul.f32 s13, s14, s2
+			vmul.f32 s12, s13, s2
+			vmul.f32 q3, q3, d0[0]
+			vmul.f32 q2, q3, d1[1]
+			vcvt.s32.f32 q2, q2
+			vcvt.f32.s32 q2, q2
+			vmul.f32 q2, q2, d1[0]
+			vsub.f32 q1, q3, q2
+			vcvt.s32.f32 q2, q1
 float_fr_save:	
-	mov r2, #0x30
-	vdup.s32 q3, r2
-	vadd.s32 q1, q2, q3 
-	vmov r2, s7
-	strb r2, [r0, r1]
-	add r1, r1, #1
-	vmov r2, s6
-	strb r2, [r0, r1]
-	add r1, r1, #1
-	vmov r2, s5
-	strb r2, [r0, r1]
-	add r1, r1, #1
-	vmov r2, s4
-	strb r2, [r0, r1]
-	add r1, r1, #1
+			mov r2, #0x30
+			vdup.s32 q3, r2
+			vadd.s32 q1, q2, q3 
+			vmov r2, s7
+			strb r2, [r0, r1]
+			add r1, r1, #1
+			vmov r2, s6
+			strb r2, [r0, r1]
+			add r1, r1, #1
+			vmov r2, s5
+			strb r2, [r0, r1]
+			add r1, r1, #1
+			vmov r2, s4
+			strb r2, [r0, r1]
+			add r1, r1, #1
 fill_float:
-	cmp r1, r3
-	bhs endfl2asc
-	mov r2, #0x20
+			cmp r1, r3
+			bhs endfl2asc
+			mov r2, #0x20
 fl2asc_fill_loop:
-	strb r2, [r0, r1]
-	add r1, r1, #1
-	cmp r1, r3
-	bhs endfl2asc
-	b fl2asc_fill_loop
+			strb r2, [r0, r1]
+			add r1, r1, #1
+			cmp r1, r3
+			bhs endfl2asc
+			b fl2asc_fill_loop
 endfl2asc:
-	// pop {r1}
-	mov		sp, r11
-	pop     {r11}
-	// ???? add r1, r1, #4	
-	ldr r0, =kformat_buffer
-	pop {lr}
-	bx  lr
+			mov sp, r11
+			pop {r11}
+			ldr r0, =kformat_buffer
+			pop {lr}
+			bx  lr
 
 	
 
@@ -139,7 +135,7 @@ num_2_dec:	// input r1 = number to convert input r2  1 = minus else = none r3 = 
 			push    {lr}
 			push 	{r11}
 			mov 	r11, sp
-			and     r2, r2, #0x3f ///////????-> useless??!
+			and     r2, r2, #0x3f 
 			push 	{r1, r2}
 			bl      clear_buff
 buff_cleared_dec:				
@@ -163,20 +159,20 @@ dec_signed_processed:
 			add     r0, r1, #0x30
 			push    {r0}
 			add     r6, #1
-			b 		num_2_dec_conv_end
+			b 	num_2_dec_conv_end
 num_2_dec_loop:
-			mov     r3, r1      		// r3 last value
+			mov     r3, r1      		
 			cmp     r3, #0
 			beq     num_2_dec_conv_end
-			udiv    r1, r1, r2      	// r1 = r1/10 -> Integer without rest
+			udiv    r1, r1, r2      	
 			umull 	r0, r5, r1, r2		 
-			sub     r0, r3, r0  		// r0 Rest der Division
+			sub     r0, r3, r0  		
 			add     r0, #0x30
 			push    {r0}
 			add     r6, #1
-			b		num_2_dec_loop
+			b	num_2_dec_loop
 num_2_dec_conv_end:		
-			cmp     r6, #0			// ist das nötig?
+			cmp     r6, #0			
 			beq     print_is_d
 			mov     r1, r6 
 			//nicht getestet
@@ -214,8 +210,8 @@ num_2_dec_end:
 			subne   r1, #1
 			mov     r2, #0
 			strb    r2, [r3]
-			pop		{r4, r5, r6, r7}
-			mov		sp, r11
+			pop	{r4, r5, r6, r7}
+			mov	sp, r11
 			pop     {r11}
 			ldr     r0, =kformat_buffer
 			pop     {lr}
@@ -244,17 +240,17 @@ buff_cleared_hex:
 			cmp     r2, #0
 			subne   r5, r2, #2
 			moveq   r5, r2
-			mov     r3, #0			      // ab hier eigentliche fkt!
+			mov     r3, #0			      
 num_2_ascii_Hex_loop:
 
 			and     r2, r1, #0xf
 			ldr 	r4, =Hex_Lookup
 			ldrb	r4, [r4, r2]
 			push    {r4}
-			add		r3, r3, #1
-			lsr		r1, r1, #4	
-			cmp		r1, #0				
-			bne		num_2_ascii_Hex_loop
+			add	r3, r3, #1
+			lsr	r1, r1, #4	
+			cmp	r1, #0				
+			bne	num_2_ascii_Hex_loop
 			cmp     r3, r5
 			ldr 	r4, =kformat_buffer
 			bge     hex_save
@@ -275,7 +271,7 @@ hex_save:
 			ldr     r2, =#0x78
 			strb    r2, [r4, #1]
 			add     r4, r4, #2
-			mov		r1, r3
+			mov	r1, r3
 			mov     r3, #0 
 			sub     r1, #1
 hex_save_loop:
@@ -287,13 +283,12 @@ hex_save_loop:
 			add     r1, r1, #2
 			add     r1, r1, r5
 			pop     {r4,r5, r6}
-			mov		sp, r11
+			mov	sp, r11
 			pop     {r11}
-breakpoint: // auskommentieren - war nur für debugging
-			ldr		r0, =kformat_buffer
+			ldr	r0, =kformat_buffer
 			pop     {lr}
 			bx      lr
-			// output r0 ist string output r1 muss länge + fieldwidth sein, wenn fieldwidt größer länge
+
 			
 	
 @************************************************************************************
@@ -304,9 +299,9 @@ breakpoint: // auskommentieren - war nur für debugging
 @************************************************************************************	
 clear_buff:
 			push    {lr}
-			ldr 	r0, =kformat_buffer    // Buffer clear
+			ldr 	r0, =kformat_buffer    
 			mov     r1, #0x00
-			mov		r2, #120
-			bl		memset
+			mov	r2, #120
+			bl	memset
 			pop     {lr}
 			bx      lr
