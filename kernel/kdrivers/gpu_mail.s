@@ -37,8 +37,8 @@ wait_write:
     tst     r3, #MAIL_FULL            	            @ pruefe ob die Mailbox voll ist
     bne     wait_write                              @ wenn ja -> wait_write-Schleife
 wait_write_end:                                     @ wenn nein -> falle zur dieser Funktion
-    add     r2, r1                			        @ Setze den Kanal als die letzten Bits der Nachricht
-    str     r2, [r0, #MB_WRITE]       			    @ schreibe die Nachricht in --> mailbox 1 write register
+    add     r2, r1                		    @ Setze den Kanal als die letzten Bits der Nachricht
+    str     r2, [r0, #MB_WRITE]       		    @ schreibe die Nachricht in --> mailbox 1 write register
     pop     {pc}                            
 	
 
