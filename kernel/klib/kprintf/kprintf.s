@@ -50,7 +50,7 @@ kprintf:    						@ formatstring in r1 // output-type in r2 // Parameter im Stac
 	push 	{lr}                   
 	push 	{r11}
 	mov 	r11, sp
-	sub 	sp,	sp, #STACKMAX	    
+	sub 	sp, sp, #STACKMAX	    
 	str     r1, [r11, #STR_ADR  ]
 	str     r2, [r11, #OUT_TYPE ]
 	mov     r0, #0
@@ -62,24 +62,24 @@ debugstack1:
 clear_buff:
 	ldr 	r0, =kprintf_buffer     @ clear Buffer 
 	mov     r1, #0x00
-	mov		r2, #1024
-	bl		memset	
+	mov	r2, #1024
+	bl	memset	
 	
 scan_srcstr_loop:				
 	ldr     r0, [r11, #STR_ADR]
 	ldrb	r1, [r0]   
-	cmp		r1, #0                   @ Ende des nullterminierten Strings erreicht?
-	beq		kprintf_buf_out
-	cmp		r1, #0xD                 @ Enter?
-	beq		kprintf_buf_out
+	cmp	r1, #0                   @ Ende des nullterminierten Strings erreicht?
+	beq	kprintf_buf_out
+	cmp	r1, #0xD                 @ Enter?
+	beq	kprintf_buf_out
 	cmp 	r1, #'%'                 @ Umwandlungszeichen?
-	bne		buff_str_char
-	ldr		r1, [r11, #PARAM_CNT]   
-	add		r1, r1, #4                      
-	str		r1, [r11, #PARAM_CNT]    
-	ldr		r0, [r11, #STR_ADR]
+	bne	buff_str_char
+	ldr	r1, [r11, #PARAM_CNT]   
+	add	r1, r1, #4                      
+	str	r1, [r11, #PARAM_CNT]    
+	ldr	r0, [r11, #STR_ADR]
 	add     r1, r0, #1
-	str		r1, [r11, #STR_ADR]
+	str	r1, [r11, #STR_ADR]
 	ldrb    r1, [r1]                 @ Lade das nächste Zeichen nach %
 		
 format_id:                           
@@ -103,17 +103,17 @@ check_loop:                          @ prüfe ob zeichen nach % eine nummer d.h 
 	add     r1, r1, r2
 	str     r1, [r11, #FIELD_W]
 	pop     {r2}
-	ldr		r0, [r11, #STR_ADR]
+	ldr	r0, [r11, #STR_ADR]
 	add     r1, r0, #1
-	str		r1, [r11, #STR_ADR] 
+	str	r1, [r11, #STR_ADR] 
 	ldrb    r1, [r1]
-	b 		check_loop
+	b 	check_loop
 checkasc:
 	orr 	r1, #32
-	cmp		r1, #0x7b
-	bhs		checkerror
+	cmp	r1, #0x7b
+	bhs	checkerror
 	sub 	r1, r1, #0x61
-	adr		r0, ascii_jmp_tbl
+	adr	r0, ascii_jmp_tbl
 	ldr 	pc, [r0, r1, lsl #2]
 	b		.                        
 
@@ -150,19 +150,19 @@ checkerror:
     mov     r0, #2
 	ldr     r1, =check_error_str
 	ldr     r2, =cer_length
-	bl 		kwrite
+	bl 	kwrite
 	b       kprintf_end
 
 is_f:
 	ldr 	r2, [r11, #BUFF_CNT]
 	mov     r0, #1024
-	add		r3, r2, #10
+	add	r3, r2, #10
 	cmp 	r3, r0
-	bhs		format_id_error	
-	ldr		r0, [r11, #STR_ADR]
+	bhs	format_id_error	
+	ldr	r0, [r11, #STR_ADR]
 	add     r1, r0, #1
-	str		r1, [r11, #STR_ADR] 
-	ldr		r1, [r11, #PARAM_CNT]
+	str	r1, [r11, #STR_ADR] 
+	ldr	r1, [r11, #PARAM_CNT]
 	add     r1, #ARGS
 	ldr     r1, [r11, r1]
 	ldr     r3, [r11, #FIELD_W]
@@ -176,10 +176,10 @@ is_f_print_to_buff:
 	push    {r0}
 	ldr 	r2, [r11, #BUFF_CNT]
 	mov     r0, #1024
-	add		r3, r2, r1
+	add	r3, r2, r1
 	cmp 	r3, r0
 	pop     {r0}
-	bhs		format_id_error	
+	bhs	format_id_error	
 	push    {r4, r5}
 	ldr     r4, =kprintf_buffer
 	mov     r5, #0
@@ -189,7 +189,7 @@ print_is_f_regular_loop:
 	ldrb    r5, [r0], #1
 	strb    r5, [r4, r2]
 	add     r2, r2, #1
-	b 		print_is_f_regular_loop
+	b 	print_is_f_regular_loop
 print_is_f_end:
 	str     r2, [r11, #BUFF_CNT]
 	pop     {r4, r5}
@@ -198,13 +198,13 @@ print_is_f_end:
 is_u:
 	ldr 	r2, [r11, #BUFF_CNT]
 	mov     r0, #1024
-	add		r3, r2, #10
+	add	r3, r2, #10
 	cmp 	r3, r0
-	bhs		format_id_error	
-	ldr		r0, [r11, #STR_ADR]
+	bhs	format_id_error	
+	ldr	r0, [r11, #STR_ADR]
 	add     r1, r0, #1
-	str		r1, [r11, #STR_ADR] 
-	ldr		r1, [r11, #PARAM_CNT] 
+	str	r1, [r11, #STR_ADR] 
+	ldr	r1, [r11, #PARAM_CNT] 
 	add     r1, #ARGS
 	ldr     r1, [r11, r1]
 	mov     r2, #0
@@ -213,13 +213,13 @@ is_u:
 is_d:
 	ldr 	r2, [r11, #BUFF_CNT]
 	mov     r0, #1024
-	add		r3, r2, #10
+	add	r3, r2, #10
 	cmp 	r3, r0
-	bhs		format_id_error	
-	ldr		r0, [r11, #STR_ADR]
+	bhs	format_id_error	
+	ldr	r0, [r11, #STR_ADR]
 	add     r1, r0, #1
-	str		r1, [r11, #STR_ADR] 
-	ldr		r1, [r11, #PARAM_CNT] 
+	str	r1, [r11, #STR_ADR] 
+	ldr	r1, [r11, #PARAM_CNT] 
 	add     r1, #ARGS
 	ldr     r1, [r11, r1]
 check_minus:		
@@ -247,10 +247,10 @@ is_d_print_to_buff:
 	push    {r0}
 	ldr 	r2, [r11, #BUFF_CNT]
 	mov     r0, #1024
-	add		r3, r2, r1
+	add	r3, r2, r1
 	cmp 	r3, r0
 	pop     {r0}
-	bhs		format_id_error	
+	bhs	format_id_error	
 	ldr     r4, =kprintf_buffer
 print_is_d_regular_loop:
 	cmp     r1, #0
@@ -259,42 +259,42 @@ print_is_d_regular_loop:
 	sub     r1, #1
 	strb    r3, [r4, r2]
 	add     r2, r2, #1
-	b 		print_is_d_regular_loop
+	b 	print_is_d_regular_loop
 print_is_d_reg_end:
 	str     r2, [r11, #BUFF_CNT]
-	b		format_id_end
+	b	format_id_end
 
 	
 
 is_s:
-	ldr		r0, [r11, #STR_ADR]
+	ldr	r0, [r11, #STR_ADR]
 	add     r1, r0, #1
-	str		r1, [r11, #STR_ADR] 
-	ldr		r1, [r11, #PARAM_CNT]
+	str	r1, [r11, #STR_ADR] 
+	ldr	r1, [r11, #PARAM_CNT]
 	add     r1, #ARGS
 	ldr     r1, [r11, r1]
-	mov		r3, #0
+	mov	r3, #0
 scanf_buff_width:
 	ldrb 	r2, [r1,r3]
-	cmp		r2, #0x00
+	cmp	r2, #0x00
 	beq     got_length
 	add 	r3, r3, #1
-	b		scanf_buff_width
+	b	scanf_buff_width
 got_length:
-	cmp		r3, #0
-	mov		r0, r1
-	beq		format_id_error
+	cmp	r3, #0
+	mov	r0, r1
+	beq	format_id_error
 	mov     r1, r0
 	ldr 	r2, [r11, #BUFF_CNT]
-	add		r2, r2, r3
+	add	r2, r2, r3
 	mov     r0, #1024
 	cmp 	r2, r0
-	mov		r0, r1
-	bhs		format_id_error							
+	mov	r0, r1
+	bhs	format_id_error							
 	push	{r4,r5}
-	ldr		r4, =kprintf_buffer
+	ldr	r4, =kprintf_buffer
 	ldr 	r2, [r11, #BUFF_CNT]
-	add		r4, r2, r4             @ Buffer Offset
+	add	r4, r2, r4             @ Buffer Offset
 	mov     r5, r3
 	
 print_string_loop:
@@ -304,21 +304,21 @@ print_string_loop:
 	bne 	print_string_loop
 print_string_end:
 	ldr 	r2, [r11, #BUFF_CNT]
-	add		r2, r2, r5
+	add	r2, r2, r5
 	str 	r2, [r11, #BUFF_CNT]
-	pop		{r4,r5}
-	b		format_id_end
+	pop	{r4,r5}
+	b	format_id_end
 	
 is_x:
 	ldr 	r2, [r11, #BUFF_CNT]
 	mov     r0, #1024
-	add		r3, r2, #10
+	add	r3, r2, #10
 	cmp 	r3, r0
-	bhs		format_id_error	
-	ldr		r0, [r11, #STR_ADR]
+	bhs	format_id_error	
+	ldr	r0, [r11, #STR_ADR]
 	add     r1, r0, #1
-	str		r1, [r11, #STR_ADR] 
-	ldr		r1, [r11, #PARAM_CNT]
+	str	r1, [r11, #STR_ADR] 
+	ldr	r1, [r11, #PARAM_CNT]
 	add     r1, #ARGS
 	ldr     r1, [r11, r1]
 	ldr     r2, [r11, #FIELD_W]
@@ -334,10 +334,10 @@ is_x_print_to_buff:
 	push    {r0}
 	ldr 	r2, [r11, #BUFF_CNT]
 	mov     r0, #1024
-	add		r3, r2, r1
+	add	r3, r2, r1
 	cmp 	r3, r0   
 	pop     {r0}
-	bhs		format_id_error	
+	bhs	format_id_error	
 	push    {r4, r5}
 	ldr     r4, =kprintf_buffer
 print_is_x_regular_loop:
@@ -347,7 +347,7 @@ print_is_x_regular_loop:
 	sub     r1, #1
 	strb    r3, [r4, r2]
 	add     r2, r2, #1
-	b 		print_is_x_regular_loop
+	b 	print_is_x_regular_loop
 print_is_x_end:
 	str     r2, [r11, #BUFF_CNT]
 	pop     {r4, r5}
@@ -356,39 +356,39 @@ format_id_end:
 	b       scan_srcstr_loop
 		
 buff_str_char:
-	ldr		r3, =kprintf_buffer
-	ldr		r2, [r11, #BUFF_CNT] 
-	ldr		r0, [r11, #STR_ADR ] 
+	ldr	r3, =kprintf_buffer
+	ldr	r2, [r11, #BUFF_CNT] 
+	ldr	r0, [r11, #STR_ADR ] 
 	ldrb	r1, [r0]              @ lade byte aus string
 	strb	r1, [r3, r2]          @ speicher in buffer
-	add		r2, r2, #1            @ erhöhe BUFF_CNT
-	str		r2, [r11, #BUFF_CNT]  @ bufferposition anpassen
-	ldr		r0, [r11, #STR_ADR ]  @ erhöhe stringaddresse
-	add		r0, r0, #1
-	str		r0, [r11, #STR_ADR ]
-	b 		scan_srcstr_loop
+	add	r2, r2, #1            @ erhöhe BUFF_CNT
+	str	r2, [r11, #BUFF_CNT]  @ bufferposition anpassen
+	ldr	r0, [r11, #STR_ADR ]  @ erhöhe stringaddresse
+	add	r0, r0, #1
+	str	r0, [r11, #STR_ADR ]
+	b 	scan_srcstr_loop
 
 format_id_error:
 	mov     r0, #2
 	ldr     r1, =format_id_error_str
 	ldr     r2, =fid_length
-	bl 		kwrite
+	bl 	kwrite
 	b       kprintf_end
 	
 kprintf_buf_out:
 	ldr     r0, [r11, #OUT_TYPE]
 	ldr     r1, =kprintf_buffer
 	ldr     r2, [r11, #BUFF_CNT]
-	bl 		kwrite
+	bl 	kwrite
 debugstack2:	
 kprintf_end:
 	pop     {r4, r5, r6, r7}
-    add     sp, sp, #STACKMAX
-	mov		sp, r11
+        add     sp, sp, #STACKMAX
+	mov	sp, r11
 	pop 	{r11}
-	pop		{lr}
-	bx		lr
-	b		.
+	pop	{lr}
+	bx	lr
+	b	.
 		
 
 
