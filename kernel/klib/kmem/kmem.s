@@ -35,7 +35,7 @@ memset_end:
 //memcpy implementieren: durch 4 teilbar? durch 8 teilbar? durch 16 teilbar? usw -> zusätzliche schnellere varianten
 memcpy:// dst = r0 src = r1 size = r3
 	cmp 	r1, r0
-	bhi		memcpy_forward
+	bhi	memcpy_forward
 	add 	r3, r1, r2
 	cmp 	r0, r3
 	bhi 	memcpy_forward
@@ -44,16 +44,16 @@ memcpy_reverse:
 	ldrb 	r3, [r1, r2]
 	strb 	r3, [r0, r2]
 	beq 	memcpy_end
-	b 		memcpy_reverse
-	b		.
+	b 	memcpy_reverse
+	b	.
 memcpy_forward:
 	ldrb 	r3, [r1], #1
 	strb 	r3, [r0], #1
 	subs 	r2, r2, #1
 	bgt 	memcpy_forward
 memcpy_end:
-	bx 		lr
-	b		.
+	bx 	lr
+	b	.
 
 
 
@@ -68,7 +68,7 @@ memcpy_end:
 
 //noch nicht geprüft
 memcmp: // src1 = r0 src2 = r1 size = r2
-	mov		r3, r0
+	mov	r3, r0
 	mov 	r0, #0
 	push    {r4, r5}
 mem_cmp_loop:	
@@ -76,12 +76,12 @@ mem_cmp_loop:
 	beq 	mem_cmp_end
 	ldrb 	r4, [r3], #1
 	ldrb 	r5, [r1], #1
-	cmp		r4, r5
+	cmp	r4, r5
 	bne 	mem_cmp_ne
 	subs 	r2, r2, #1
-	b 		mem_cmp_loop
+	b 	mem_cmp_loop
 mem_cmp_ne:
 	mov 	r0, #1
 mem_cmp_end:
 	pop     {r4, r5}
-	bx 		lr
+	bx 	lr
