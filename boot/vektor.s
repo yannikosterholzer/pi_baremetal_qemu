@@ -7,14 +7,14 @@
 .section .text
 			.balign 32
 vector:
-    ldr pc, reset_handler
-    ldr pc, undefined_handler
-    ldr pc, swi_handler
-    ldr pc, prefetch_handler
-    ldr pc, data_handler
-    ldr pc, unused_handler
-    ldr pc, irq_handler
-    ldr pc, fiq_handler
+    		ldr pc, reset_handler
+    		ldr pc, undefined_handler
+    		ldr pc, swi_handler
+    		ldr pc, prefetch_handler
+    		ldr pc, data_handler
+    		ldr pc, unused_handler
+    		ldr pc, irq_handler
+    		ldr pc, fiq_handler
 
 	
 reset_handler:      .word reset
