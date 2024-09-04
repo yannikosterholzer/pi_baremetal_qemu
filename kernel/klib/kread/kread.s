@@ -6,14 +6,7 @@
 
   newline:    .asciz "/n" 
 .section .text
-//
-//
-//
-// --------------------> scanf braucht buffer und kread muss länge gelesen zurückgeben!
-//
-//
-//
-//
+
 
 @************************************************************************************
 @                      kread
@@ -22,20 +15,20 @@
 @  etwa von UART oder Dateien
 @ (Wird von kscanf benutzt)
 @************************************************************************************
-kread:             //r0 = INPUT-Stream (FILE/UART) //r1 = destination address (von kscanf gestellt) //r2 = Number of Bytes to read (von kscanf gestellt) // r3 = sourcedata (?) Das zu implementieren setzt filesystem voraus und umschreiben des codes da r3 anderweitig benutzt wird
-   push 	{lr}
-   push 	{r11}
-   mov 	r11, sp
-   and  r0, r0, #0x1
-   adr	r3, input_tbl
-   ldr 	pc, [r3, r0, lsl #2]
-   b   . //shouln´t be reachable
+kread:             // r0 = INPUT-Stream (FILE/UART) //r1 = destination address (von kscanf gestellt) //r2 = Number of Bytes to read (von kscanf gestellt) // r3 = sourcedata (?) Das zu implementieren setzt filesystem voraus und umschreiben des codes da r3 anderweitig benutzt wird
+   	push 	{lr}
+   	push 	{r11}
+   	mov 	r11, sp
+  	and  r0, r0, #0x1
+   	adr	r3, input_tbl
+  	ldr 	pc, [r3, r0, lsl #2]
+   	b   . //shouln´t be reachable
 input_tbl:
    in_0: 
             .word in_0_handler // read from File
    in_1: 
             .word in_1_handler // read from uart
-   b        .
+   	b        .
    
 in_0_handler: // read from File
 	 b        .
@@ -44,27 +37,27 @@ in_1_handler: // read from uart
 	mov     r3, #0 //count
 scan_loop:
 	push 	{r1,r2,r3}
-	bl 		k_uart_read_char
+	bl 	k_uart_read_char
 	pop 	{r1,r2,r3}
 	cmp     r0, #0xD // CR?
-	bne		scan_not_enter
+	bne	scan_not_enter
 scan_enter: 
 	mov     r0, #2
 	ldr     r1, =newline
 	mov     r2, #2
 	push    {r3}
-	bl 		kwrite
+	bl 	kwrite
 	pop     {r3}
-	cmp		r3, #0
+	cmp	r3, #0
 	movne	r0, #0
-	bne		scan_end_correct
-	b		scanstr_error
+	bne	scan_end_correct
+	b	scanstr_error
 	
 scan_not_enter:
-	cmp		r0, #0x8
+	cmp	r0, #0x8
 	beq 	read_del
-	cmp		r0, #0x20 
-	blo		scan_loop
+	cmp	r0, #0x20 
+	blo	scan_loop
 //	beq     skip_save  // unnecessary
 ami_ger_tastatur:
 	cmp     r0, #0x59    @ Y -> Z
@@ -79,15 +72,15 @@ ami_ger_tastatur:
 	cmp     r0, #0x7a    @ z -> y
 	subeq   r0, r0, #1
 ami_ger_skip:
-	bl 		k_uart_write_char 
+	bl 	k_uart_write_char 
 	strb	r0, [r1, r3]
-	cmp		r3, r2
-	add		r3, r3, #1
-	bne		scan_loop
+	cmp	r3, r2
+	add	r3, r3, #1
+	bne	scan_loop
 
 	
 scanstr_error:
-	ldr		r0, =0xffffffff
+	ldr	r0, =0xffffffff
 	b       scan_end
 scan_end_correct:
 	sub     r0, r3, #1    @ stringlänge in r0
@@ -95,7 +88,7 @@ scan_end:
 	mov     sp, r11
 	pop     {r11}
 	pop 	{lr}
-	bx 		lr
+	bx 	lr
 	
 read_del:
 	cmp r3, #0
