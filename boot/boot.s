@@ -44,37 +44,36 @@
 		
 		@ pruefe das privigierungslevel des aktiven cores 
 		check_pl:	
-                mrs r0, cpsr  
-                mov r1, #MODE_MASK
-                and r2, r0, r1
-                cmp r2, #MODE_SVC
-                bne sleep
+                		mrs r0, cpsr  
+               			mov r1, #MODE_MASK
+                		and r2, r0, r1
+                		cmp r2, #MODE_SVC
+                		bne sleep
 
-			@ setze vector-adresse
+		@ setze vector-adresse
 				ldr r0, =vector
 				mcr p15, #0, r0, c12, c0, 0
 				
-    		  @ Wechsel in den Interruptmodus
-                mrs r0, cpsr  
-                mvn r1, #MODE_MASK
-                and r0, r1
-                orr r0, #MODE_IRQ
-                msr cpsr, r0
-                
+    		@ Wechsel in den Interruptmodus
+                		mrs r0, cpsr  
+                		mvn r1, #MODE_MASK
+                		and r0, r1
+                		orr r0, #MODE_IRQ
+                		msr cpsr, r0
               @ Stack für Interruptmodus aufsetzen
-                mov sp, #STACK_IRQ
+                		mov sp, #STACK_IRQ
                                 
               @ Wechsle zurück in den Supervisor Modus
-                mrs r0, cpsr  
-                mvn r1, #MODE_MASK
-                and r0, r1
-                orr r0, #MODE_SVC
-                msr cpsr, r0
+                		mrs r0, cpsr  
+                		mvn r1, #MODE_MASK
+                		and r0, r1
+                		orr r0, #MODE_SVC
+                		msr cpsr, r0
 				
         @ enable Neon-Coprozessor
-		        mrc p15, 0, r0, c1, c1, 2
+		        	mrc p15, 0, r0, c1, c1, 2
 				orr r0, r0, #(3<<10)          @ enable neon
-				bic r0, r0, #(3<<14)          @ clear nsasedis/nsd32dis /// !!!!!!! hierfür equs!
+				bic r0, r0, #(3<<14)          @ clear nsasedis/nsd32dis 
 				mcr p15, 0, r0, c1, c1, 2
 				ldr r0, =(0xF << 20)
 				mcr p15, 0, r0, c1, c0, 2
@@ -89,7 +88,7 @@
 				mov sp, #0x80000
 				bl k_uart0_init
 				bl 	KMain 	
-				b  .    	@ wenn main verlassen wird -> hier Dauerschleife
+				b  .    			@ wenn main verlassen wird -> hier Dauerschleife
 							
 sleep:
 				b sleep						
