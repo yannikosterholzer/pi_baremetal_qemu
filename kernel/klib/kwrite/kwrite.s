@@ -58,7 +58,7 @@ out_2_newline_output:
 	bhs     Out_2_loop_end
 	b Out_2_loop
 out_2_output:	
-	bl		k_uart_write_char 
+	bl	k_uart_write_char 
 	add     r3, r3, #1
 	b Out_2_loop
 Out_2_loop_end:     
@@ -76,15 +76,15 @@ out_2_print_newline:
 	mov     r0, #2
 	ldr     r1, =newline
 	ldr     r2, =2
-	bl 		kwrite
+	bl 	kwrite
 	pop     {r0-r3}
 	pop     {lr}
 	bx      lr
 	
 //?????????????? oben platzieren?!
 write_end:
-	mov		sp, r11
+	mov	sp, r11
 	pop 	{r11}
-	pop		{lr}
-	bx		lr
-	b		.
+	pop	{lr}
+	bx	lr
+	b	.
