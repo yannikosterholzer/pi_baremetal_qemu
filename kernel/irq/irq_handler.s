@@ -22,7 +22,7 @@
 			  bne handle_irq_3_end
 			  ldr r1, =cntfrq
 			  ldr r1, [r1] // clear interrupt and set next timer
-			  bl write_cntv_tval                                           // ?????????
+			  bl write_cntv_tval                                           
 			
 			//Test
 			  ldr     r1, =timer
