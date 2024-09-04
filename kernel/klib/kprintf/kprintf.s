@@ -147,7 +147,7 @@ ascii_jmp_tbl:
     z: .word checkerror
 .balign 4	
 checkerror:
-    mov     r0, #2
+    	mov     r0, #2
 	ldr     r1, =check_error_str
 	ldr     r2, =cer_length
 	bl 	kwrite
