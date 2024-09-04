@@ -29,8 +29,8 @@ fiq_handler:        .word hang
 
 
 reset:
-		b		start
-		b		.
+		b start
+		b .
 
 @ Timerinterrupt
 irq:
