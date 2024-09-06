@@ -1,5 +1,5 @@
 # pi_baremetal_qemu
-This repository contains ARM assembly code designed for bare-metal programming on the Raspberry Pi 2B
+This repository contains ARM assembly code designed for bare-metal programming on the Raspberry Pi 2B. It includes a printf implementation, as well as a simple scanf-implementation and some math functions
 
 **Qemu starten mit:** 
 
