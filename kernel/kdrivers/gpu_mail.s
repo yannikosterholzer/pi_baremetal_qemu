@@ -30,8 +30,9 @@ MailboxWrite:                                       @ input message in r0, chann
     tst     r0, #channel_mask                       @ validate mail
     bne     error_exit
     cmp     r1, #channel_mask                       @ validate channel                             
-    bhi     error_exit                  
-	ldr     r0, =#MailboxBaseAdr
+    bhi     error_exit             
+    mov     r2, r0
+    ldr     r0, =#MailboxBaseAdr
 wait_write:
     ldr     r3, [r0, #MB_STATUS_WRITE]        	    @ Fordere Status von Mailbox 1 an
     tst     r3, #MAIL_FULL            	            @ pruefe ob die Mailbox voll ist
