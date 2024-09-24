@@ -2,6 +2,7 @@
 .extern KMain
 .extern k_uart0_init
 .extern vector	
+.extern textmode_init
 
 //equs fuer modes und stackadressen!
 .equ   MODE_MASK,              0x1F
@@ -70,7 +71,7 @@
                 		orr r0, #MODE_SVC
                 		msr cpsr, r0
 				
-        @ enable Neon-Coprozessor
+               @ enable Neon-Coprozessor
 		        	mrc p15, 0, r0, c1, c1, 2
 				orr r0, r0, #(3<<10)          @ enable neon
 				bic r0, r0, #(3<<14)          @ clear nsasedis/nsd32dis 
@@ -80,12 +81,33 @@
 				mov r3, #0x40000000 
 				vmsr FPEXC, r3
 				
-		@ enable interrupts
+		@ Setze Stack-Basis-Adresse
+				mov sp, #0x80000
+  		
+  		@ enable interrupts
 				cpsie i  
+    		
+      		@ set up textmode
+				push {r0-r3}
+				bl textmode_init
+				pop {r0-r3}
 		
 		@ Aufruf der Mainfunktion
 		kernel_entry:
-				mov sp, #0x80000
+    				@ Reset Register
+				mov r0,  #0
+				mov r1,  #0
+				mov r2,  #0
+				mov r3,  #0
+				mov r4,  #0
+				mov r5,  #0
+				mov r6,  #0
+				mov r7,  #0
+				mov r8,  #0
+				mov r9,  #0
+				mov r10, #0
+				mov r11, #0
+				mov r12, #0
 				bl k_uart0_init
 				bl 	KMain 	
 				b  .    			@ wenn main verlassen wird -> hier Dauerschleife
