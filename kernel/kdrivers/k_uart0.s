@@ -20,7 +20,7 @@
 @ Sie setzt die Steuerung zurück, konfiguriert die Baudrate und aktiviert FIFOs. 
 @ Schließlich wird die UART-Schnittstelle aktiviert.
 @************************************************************************************
-    k_uart0_init:		
+        k_uart0_init:		
 	uart_ctrl_reset:  							    @ Reset CTRL Reg   
 				push	{r0-r1,lr}
 				mov	r0, #0
