@@ -16,6 +16,9 @@ arm-none-eabi-as -march=armv7-a -mfloat-abi=hard  -mcpu=cortex-a7 -c kernel/klib
 arm-none-eabi-as -march=armv7-a -mfloat-abi=hard  -mcpu=cortex-a7 -c kernel/klib/kgraphics/kcanvas.s -g -o build/kcanvas.o
 arm-none-eabi-as -march=armv7-a -mfloat-abi=hard  -mfpu=neon-vfpv4 -mcpu=cortex-a7 -c kernel/klib/kmath/matrix.s -g -o build/matrix.o
 arm-none-eabi-as -march=armv7-a -mfloat-abi=hard  -mfpu=neon-vfpv4 -mcpu=cortex-a7 -c kernel/klib/kmath/trigono.s -g -o build/trigono.o
+arm-none-eabi-as -march=armv7-a -mfloat-abi=hard  -mcpu=cortex-a7 -c kernel/klib/ktext/textmode.s -g -o build/textmode.o
+arm-none-eabi-as -march=armv7-a -mfloat-abi=hard  -mcpu=cortex-a7 -c kernel/klib/ktext/chars.s -g -o build/chars.o
+arm-none-eabi-as -march=armv7-a -mfloat-abi=hard  -mcpu=cortex-a7 -c kernel/klib/ktext/text.s -g -o build/text.o
 
 cd build
 arm-none-eabi-ld -g  neon-test.o boot.o vektor.o kmain.o kprintf.o kcanvas.o kread.o kmem.o gpu_mail.o kframebuff.o k_timer.o kformat.o k_uart0.o kwrite.o kscan.o irq_handler.o matrix.o trigono.o -T link.lds -o out/kernel7.elf --print-map > out/log/kernel_map.s
