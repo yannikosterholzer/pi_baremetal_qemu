@@ -10,11 +10,8 @@
 .equ   MODE_IRQ,               0x12
 .equ   MODE_SVC,               0x13
 .equ   STACK_IRQ,            0x7000
-   
-//   OS_STACK als equs!
 
 .section .text
-	//define label start
 	start:
 				@ interrupts ausmaskieren				
 				cpsid if 
