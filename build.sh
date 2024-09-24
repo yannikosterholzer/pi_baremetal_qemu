@@ -6,6 +6,7 @@ arm-none-eabi-as -march=armv7-a -mfloat-abi=hard  -mcpu=cortex-a7 -c kernel/klib
 arm-none-eabi-as -march=armv7-a -mfloat-abi=hard  -mcpu=cortex-a7 -c kernel/klib/kscanf/kscan.s -g -o build/kscan.o
 arm-none-eabi-as -march=armv7-a -mfloat-abi=hard  -mcpu=cortex-a7 -c kernel/klib/kwrite/kwrite.s -g -o build/kwrite.o
 arm-none-eabi-as -march=armv7-a -mfloat-abi=hard  -mcpu=cortex-a7 -c kernel/klib/kprintf/kprintf.s -g -o build/kprintf.o
+arm-none-eabi-as -march=armv7-a -mfloat-abi=hard  -mcpu=cortex-a7 -c kernel/klib/kdelay/delay.s -g -o build/delay.o
 arm-none-eabi-as -march=armv7-a -mfloat-abi=hard   -mfpu=neon-vfpv4 -mcpu=cortex-a7 -c kernel/klib/kformat/kformat.s -g -o build/kformat.o
 arm-none-eabi-as -march=armv7-a -mfloat-abi=hard  -mcpu=cortex-a7 -c kernel/kdrivers/gpu_mail.s -g -o build/gpu_mail.o
 arm-none-eabi-as -march=armv7-a -mfloat-abi=hard  -mcpu=cortex-a7 -c kernel/kdrivers/k_timer.s -g -o build/k_timer.o
