@@ -1,4 +1,3 @@
-.section .vector_table 
 .extern start                 @ startpunkt in boot.s
 .extern irq_handler_ext
 .global vector
