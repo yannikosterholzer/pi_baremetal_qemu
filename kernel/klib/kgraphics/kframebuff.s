@@ -5,10 +5,10 @@
 .section .data
 .align 16
 FrameBufferInfo:
-    .word        1024                            // #0 Physical Width
-    .word        768                             // #4 Physical Height
-    .word        1024                            // #8 Virtual Width
-    .word        768                             // #12 Virtual Height
+    .word        640                             // #0 Physical Width
+    .word        480                             // #4 Physical Height
+    .word        640                             // #8 Virtual Width
+    .word        480                             // #12 Virtual Height
     .word        0                               // #16 GPU - Pitch
     .word        16                              // #20 Bit Depth
     .word        0                               // #24 X
