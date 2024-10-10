@@ -144,9 +144,9 @@ ascii_jmp_tbl:
 
 	
 sc_is_d:         
-	ldr r1, =kscanf_buffer
-	mov r2, #0
-	mov r3, #10
+	ldr r0, =kscanf_buffer
+	mov r1, #0
+	mov r2, #10
 	bl memset                    @ clear buffer
 
 sc_get_val:
@@ -206,9 +206,9 @@ dez_end:
 	str r0, [r11, r1]
         b format_id_end
 sc_is_s:
-	ldr r1, =kscanf_buffer
-	mov r2, #0
-	ldr r3, =#1024
+	ldr r0, =kscanf_buffer
+	mov r1, #0
+	ldr r2, =#1024
 	bl memset                    @ clear buffer	
 get_string:	
 	mov r0, #1
