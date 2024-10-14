@@ -106,7 +106,3 @@ tanend:
     pop	{r11}
     pop {lr}
     pop {pc}
-
-error:
-    mov r1, #1                   
-    pop {pc}    
