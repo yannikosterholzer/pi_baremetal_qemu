@@ -1,4 +1,6 @@
-.global trigon
+.global sine
+.global cos
+.global tan
 
 .data
 halfpi: .float  1.5707963
@@ -24,22 +26,6 @@ sin(x) = x - (x^3)/(3!) + (x^5)/(5!)  - (x^7)/(7!)  + (x^9)/(9!) - (x^11)/(11!) 
 */
 
 .text
-
-trigon:             @ r0 = Int-Value für den sin/cos/tan berechnet werden soll r1 = auswahl zwischen sin(0) cos(1) tan(2)
-  push 	{lr}
-  @ Integer -> Gleitkommawert
-  vmov s0, r0
-  vcvt.f32.s32 s1, s0  
-  @ Auswahl der Funktion
-  and r1, r1, #3
-  adr r3, trig_table
-  ldr pc, [r3, r1, lsl #2]
-  b   . @ unerreichbar
-trig_table:
-   sine_: .word sine
-   cos_:  .word cos
-   tan_:  .word tan
-   err_:  .word error
 
 sine:                           @ input wert in s0 (f32) ergebnis in s0 (f32) [rad]
     vpush {d8-d15}     
