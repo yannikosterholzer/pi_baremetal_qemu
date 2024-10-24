@@ -203,7 +203,8 @@ dez_end:
 	subne  r0, r1, r0             @resultat ist negativ (zweierkomplement)  			
 	ldr r1, [r11, #PARAM_CNT] 
 	add r1, #ARGS
-	str r0, [r11, r1]
+	ldr r1, [r11, r1]
+	str r0, [r1]  
         b format_id_end
 sc_is_s:
 	ldr r0, =kscanf_buffer
