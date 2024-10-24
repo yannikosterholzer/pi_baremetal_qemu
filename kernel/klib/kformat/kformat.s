@@ -39,29 +39,15 @@ float2ascii: 	@ input : r1 = Floatwert, der zu String umgewandelt werden soll
 			mov  r11, sp
 			vmov s0, r1
 float_asc:	
+			vcmpe.f32 s0, #0
+			vmrs APSR_nzcv, FPSCR
+			movmi r2, #1
+			vabs.f32 s0, s0
 			vcvt.s32.f32 s1, s0
 			vmov r0, s1
-			cmp r0, #0
-			bge float_positive
-float_negative:
-			ldr r1, =#-1
-			vmov s2, r1
-			vcvt.f32.s32 s2, s2
-			vcvt.f32.s32 s1, s1
-			vmul.f32 s1, s1, s2
-			vmul.f32 s0, s0, s2
-			vsub.f32 s0, s0, s1
-			mov r1, #0
-			sub r1, r1, r0
-			mov r2, #1
-			mov r3, #0
-			bl num_2_dec
-			b fraction
-float_positive:
 			vcvt.f32.s32 s1, s1
 			vsub.f32 s0, s0, s1
 			mov r1, r0
-			mov r2, #0
 			mov r3, #0
 			bl num_2_dec
 fraction:
@@ -124,6 +110,7 @@ endfl2asc:
 @************************************************************************************
 
 num_2_dec:	@ input : r1 = Wert, der als Dezimalzahl in einen String dargestellt werden soll
+		@	  r2 = 0 für negativen Wert; 1 für positive Werte
                 @ output: r0 = Adresse des erzeugten Strings
                 @         r1 = Stringlänge
 @ -----------------------------------------------------------------  
