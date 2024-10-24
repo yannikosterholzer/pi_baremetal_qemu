@@ -86,7 +86,6 @@ float_fr_save:
 			add r1, r1, #1
 			vmov r2, s4
 			strb r2, [r0, r1]
-			add r1, r1, #1
 endfl2asc:
 			mov sp, r11
 			pop {r11}	
