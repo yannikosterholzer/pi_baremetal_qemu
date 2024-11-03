@@ -12,38 +12,9 @@
 .equ ARGS,              BASE +  0x04     @ offset noetig, da r11 + 4 nicht erstes Argument, sondern Rücksprungadr wäre
 // --------------------------------------
 .section .data
-  unknown_for_str:    .asciz "Error: unknown format identifier" 
-  .equ un_for_length,       ( scan_error_str - unknown_for_str)
-  
-  scan_error_str:        .asciz "Error: scanf - no args" 
-  scerror_end:          
-  .equ sc_er_length,           ( scerror_end - scan_error_str)
-  
-  dez_error1_str:        .asciz "Error: %d no input"
-  dezerror1_end: 
-  .equ dez_er1_length,         ( dezerror1_end - dez_error1_str)  
-  
-  error_input_str:       .asciz "Error: unexpected input"
-  inputerror_end: 
-  .equ input_er_length,        ( inputerror_end - error_input_str) 
-  
-  str_error_str:         .asciz "Error: %s no input"
-  strerror_end: 
-  .equ str_er_length,          ( strerror_end - str_error_str) 
-  
-  error_wrinput_str:     .asciz "Error: %s input"
-  wrinerror_end: 
-  .equ wrinputstr_er_length,       ( wrinerror_end - error_wrinput_str) 
-
- 
-
- 
  .balign 4
- 
- 
-
-  kscanf_buffer:
-                       .space 1024, 0x0
+ kscanf_buffer:
+                .space 1024, 0x0
 
 .section .text
 kscan: // r1 = formatstring
@@ -78,22 +49,16 @@ format_id:
 	cmp     r1, #65                  @ 65 -> 126 = Buchstaben
 	bhi     checkasc				 @ wenn falsch -> faellt kontrolle automatisch in checkerror
 checkerror:
-	mov     r0, #2
-	ldr     r1, =unknown_for_str
-	ldr     r2, =un_for_length
-	bl 	kwrite
-	ldr	r0, =0xffffffff //Error!
-	b       scanf_end	
+	mvn r0, #0 
+	b       scanf_end		
 scanf_end_scan:
 	ldr r1, [r11, #PARAM_CNT]
-	cmp r1, #0     @ wenn scanf zuende & parametercounter == 0 muss fehler vorliegen!
+	cmp r1, #0     
+ 	ldrne r0, [r11, #PARAM_CNT] @ Returnwert 
+	asrne r0, r0, #2
 	bne scanf_end
 scan_error:
-	mov     r0, #2
-	ldr     r1, =scan_error_str
-	ldr     r2, =sc_er_length
-	bl 	kwrite
-	ldr	r0, =0xffffffff //Error!
+	mvn  r0, #1
 scanf_end:
 	pop {r6} 
 	mov sp, r11
@@ -247,32 +212,16 @@ format_id_end:
 
 
 error_dez:
-	mov     r0, #2
-	ldr     r1, =dez_error1_str
-	ldr     r2, =dez_er1_length
-	bl 	kwrite
-	ldr	r0, =0xffffffff
+	mvn     r0, #2 
 	b       scanf_end
 error_wrong_input:
-	mov     r0, #2
-	ldr     r1, =error_input_str
-	ldr     r2, =input_er_length
-	bl 	kwrite
-	ldr	r0, =0xffffffff
+	mvn     r0, #3 
 	b       scanf_end
 error_s:
-	mov     r0, #2
-	ldr     r1, =str_error_str
-	ldr     r2, =str_er_length
-	bl 	kwrite
-	ldr	r0, =0xffffffff
+	mvn     r0, #4 
 	b       scanf_end
 error_wrong_input_str:
-	mov     r0, #2
-	ldr     r1, =error_wrinput_str
-	ldr     r2, =wrinputstr_er_length
-	bl 	kwrite
-	ldr	r0, =0xffffffff
+	mvn     r0, #5 
 	b       scanf_end
 
 
