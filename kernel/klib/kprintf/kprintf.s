@@ -13,13 +13,6 @@
   HexAusgabe:	       .ascii "0x"
                        .balign 1
   HexString:           .byte  0,0,0,0,0,0,0,0
-  format_id_error_str: .asciz "Umwandlung übersteigt Buffergroesse /n"
-  check_error_str:     .asciz "Illegales Umwandlungszeichen /n"
-  error_end:           .byte  0x00
-
-@ equs  
-.equ fid_length,       ( check_error_str - format_id_error_str)
-.equ cer_length,       ( error_end - check_error_str)	
                        .balign 4
 	 
 .section .text
@@ -151,11 +144,8 @@ ascii_jmp_tbl:
     z: .word checkerror
 .balign 4	
 checkerror:
-    	mov r0, #2
-	ldr r1, =check_error_str
-	ldr r2, =cer_length
-	bl kwrite
-	b  kprintf_end
+    	mvn     r0, #0
+	b       kprintf_end
 @----------------------------------------
 is_f:
 	ldr r2, [r11, #BUFF_CNT]
@@ -297,17 +287,15 @@ buff_str_char:
 	b scan_srcstr_loop
 @----------------------------------------
 format_id_error:
-	mov r0, #2
-	ldr r1, =format_id_error_str
-	ldr r2, =fid_length
-	bl kwrite
-	b  kprintf_end
+	mvn     r0, #0
+	b       kprintf_end
 @----------------------------------------	
 kprintf_buf_out:
 	ldr r0, [r11, #OUT_TYPE]
 	ldr r1, =kprintf_buffer
 	ldr r2, [r11, #BUFF_CNT]
 	bl kwrite
+        ldr     r0, [r11, #BUFF_CNT]
 @----------------------------------------	
 kprintf_end:
 	pop {r4, r5, r6, r7}
