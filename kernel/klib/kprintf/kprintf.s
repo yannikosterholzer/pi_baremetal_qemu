@@ -203,14 +203,11 @@ is_d:
 	ldr r1, [r11, r1]
 check_minus:		
 	mov r0, #0
-	ldr r2, =#0x80000000
-	and r3, r1, r2
-	cmp r3, #0
-	moveq r2, #0
-	beq conv_dec_asc
+	cmp r1, #0
+        mov r2, #0
+ 	bpl conv_dec_asc
+        sub r1, r2, r1
 	mov r2, #1
-	sub r1, r2, r1
-	mov r1, #1
 conv_dec_asc:
 	bl num_2_dec
 	mov r4, r1
